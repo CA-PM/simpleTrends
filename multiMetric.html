@@ -47,7 +47,7 @@ var rows=(endTime - startTime) / resolutionNumber;
 
 // Build URL using parameters
 var baseUrl="/pc/odata/api/portmfs?";
-var select="$select=Timestamp,im_BitsPerSecondIn,im_BitsPerSecondOut";
+var select="$select=Timestamp," + metric1_name + "," + metric2_name;
 var filter="$filter=((ID eq " + id + "))";
 var timeRange="starttime=" + startTime + "&endtime=" + endTime;
 var resolution="resolution=" + resolution;
