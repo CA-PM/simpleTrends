@@ -25,6 +25,13 @@
 
 <script>
 
+// Define the metrics to report on
+var metric1_label="Bits per Second In"
+var metric1_name="im_BitsPerSecondIn"
+
+var metric2_label="Bits per Second Out"
+var metric2_name="im_BitsPerSecondOut"
+
 // Define variables to create dynamic content based on\
 // CAPC browser view parameters
 var id=getQueryVariable("id") // id={itemIdDa}
@@ -63,10 +70,10 @@ $(document).ready(function () {
     // Array of trend line objects
     trendData.push({
       // Key is what the metric is going to be refered to
-      key: "Bits per Second (In)",
+      key: metric1_label,
       // Values is an array of [timestamp, value] arrays
       values: data.d.results.map(function (DATA_POINT) {
-        return ([DATA_POINT.Timestamp * 1000, Number(DATA_POINT.im_BitsPerSecondIn)])
+        return ([DATA_POINT.Timestamp * 1000, Number(DATA_POINT[metric1_name])])
         }),
       // Are we creating an area or a line chart
       // area: true,
@@ -75,9 +82,9 @@ $(document).ready(function () {
       color: "#4b7da6"
     });
     trendData.push({
-      key: "Bits per Second (Out)",
+      key: metric2_label,
       values: data.d.results.map(function (DATA_POINT) {
-        return ([DATA_POINT.Timestamp * 1000, Number(DATA_POINT.im_BitsPerSecondOut)])
+        return ([DATA_POINT.Timestamp * 1000, Number(DATA_POINT[metric2_name])])
         }),
       //area: true,
       color: "#a6744b"
