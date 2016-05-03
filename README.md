@@ -10,7 +10,7 @@ Installation Instructions:
 
 CAPC Browser view sample URL:
 
-/pc/apps/user/Trends/multiMetric.html?id={ItemIdDA}&startTime={TimeStartUTC}&endTime={TimeEndUTC}
+/pc/apps/user/simpleTrends/multiMetric.html?id={ItemIdDA}&startTime={TimeStartUTC}&endTime={TimeEndUTC}
 
 Key URL parameters:
 
