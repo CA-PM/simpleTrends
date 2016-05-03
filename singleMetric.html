@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Trend</title>
+      <link rel="stylesheet" href="./lib/css/nvd3/nv.d3.css" />
+    <script type="text/javascript" src="./lib/js/d3/d3.js"></script>
+    <script type="text/javascript" src="./lib/js/nvd3/nv.d3.js"></script>
+     <script type="text/javascript" src="./lib/js/jquery/jquery-1.11.1.min.js"></script>
+     <script type="text/javascript" src="./lib/js/caHelperFunctions.js"></script>
+  <style>
+    BODY { 
+      background-color:#fdfdfd; padding:5px; 
+    }
+    svg { 
+      display: block; 
+    } 
+  </style>
+</head>
+<body>
+
+<div id="chart1" class='with-transitions' style="height:350px;width:100%;">
+    <svg></svg>
+</div>
+
+<script>
+
+// Define variables to create dynamic content based on\
+// CAPC browser view parameters
+var id=getQueryVariable("id") // id={itemIdDa}
+var startTime=getQueryVariable("startTime"); // startTime={TimeStartUTC}
+var endTime=getQueryVariable("endTime"); // endTime={TimeEndUTC}
+var resolution;
+// Determine resolution to use to avoid getting massive quantities of as-polled data
+// Going to max as-polled to 7 days and switch to hourly
+if (endTime - startTime > 604800) { resolution="HOUR"; resolutionNumber=3600;}
+else { resolution="RATE";resolutionNumber=300};
+// Determine max rows needed in query based on time range and resolution
+var rows=(endTime - startTime) / resolutionNumber; 
+
+// Build URL using parameters
+var baseUrl="/pc/odata/api/portmfs?";
+var select="$select=Timestamp,im_BitsPerSecond";
+var filter="$filter=((ID eq " + id + "))";
+var timeRange="starttime=" + startTime + "&endtime=" + endTime;
+var resolution="resolution=" + resolution;
+var maxRows="$top=" + rows;
+
+var url=baseUrl + select + "&" + filter + "&" + timeRange + "&" + resolution + "&" + maxRows;
+console.log("OpenAPI URL: " + url)
+
+// Variable to hold the NVD3 formatted data set
+var trendData=[];
+
+// Wait for the page (and libraries) to load
+$(document).ready(function () {
+  // Load the JSON data 
+  d3.json(url,function(error, data) {
+
+    // Make sure we loaded the data and if not, let the user know
+    if (error) { alert("Error: " + error)}
+    // Create nvd3 friendly format
+    // Array of trend line objects
+    trendData.push({
+      // Key is what the metric is going to be refered to
+      key: "Bits per Second",
+      // Values is an array of [timestamp, value] arrays
+      values: data.d.results.map(function (DATA_POINT) {
+        return ([DATA_POINT.Timestamp * 1000, DATA_POINT.im_BitsPerSecond])
+        }),
+      // Are we creating an area or a line chart
+      area: false,
+      // Set this lines color
+      // Here's a great resource: http://www.w3schools.com/colors/colors_picker.asp
+      color: "#4b7da6"
+    });
+
+    nv.addGraph(function() {
+      // Use the nvd3 lineChart model
+      // Doc here: https://nvd3-community.github.io/nvd3/examples/documentation.html#lineChart
+      var chart = nv.models.lineChart()
+      .margin({top: 25, right: 30, bottom: 40, left: 70})
+      .x(function(d) { return d[0] })
+      .y(function(d) {return d[1] })
+      // Specific chart options (non-axis specific)
+      chart.options({
+        height: 300,
+        forceY: [0],
+        useInteractiveGuideline: true,
+        xScale: d3.time.scale()
+      })
+      // Now lets handle the axis to format the values how we want
+      // Here's a great resource on formatting options: https://github.com/mbostock/d3/wiki/Time-Formatting
+      chart.xAxis.options({
+        tickFormat: function(d) {return d3.time.format('%m/%d %I:%M %p')(new Date(d))},
+        rotateLabels: -45
+      })
+      // Formatting the values to simplify and scale units
+      // Here's a great resource for formatting: http://koaning.s3-website-us-west-2.amazonaws.com/html/d3format.html
+      chart.yAxis.options({
+        tickFormat: d3.format('.3s')
+      })
+      // Now the D3 magic as we bind our data set to the nvd3 svg
+      d3.select('#chart1 svg')
+        .datum(trendData)
+        .transition()
+        .duration(500)
+        .call(chart);
+      // Resize the chart when the browser window changes
+      nv.utils.windowResize(chart.update);
+
+      return chart;
+
+    }); // end nv.addGraph
+  }); // end d3.json
+}); // end document ready
+</script>
+</body>
