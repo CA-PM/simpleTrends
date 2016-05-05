@@ -7,6 +7,7 @@
     <script type="text/javascript" src="./lib/js/d3/d3.js"></script>
     <script type="text/javascript" src="./lib/js/nvd3/nv.d3.js"></script>
     <script type="text/javascript" src="./lib/js/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="./lib/js/spin.js"></script>
     <script type="text/javascript" src="./lib/js/caHelperFunctions.js"></script>
   <style>
     BODY { 
@@ -58,6 +59,8 @@ console.log("OpenAPI URL: " + url)
 
 // Variable to hold the NVD3 formatted data set
 var trendData=[];
+var spinTarget = document.getElementById('chart1');
+var spinner = new Spinner({color:'#000000', lines: 12}).spin(spinTarget);
 
 // Wait for the page (and libraries) to load
 $(document).ready(function () {
@@ -91,7 +94,7 @@ $(document).ready(function () {
     });
 
     nv.addGraph(function() {
-
+      spinner.stop();
       // Use the nvd3 lineChart model
       // Doc here: https://nvd3-community.github.io/nvd3/examples/documentation.html#lineChart
       var chart = nv.models.stackedAreaChart()
