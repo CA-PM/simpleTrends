@@ -15,9 +15,9 @@ Based on the NVD3 library.
 There is no need to start or restart PC.
 4. In PC, open a context page for an interface (Inventory -> Interfaces) and edit one of the tabs of the context page.
 5. Add a browser view to the page. Configure the browser view with:  
-an appropriate title,  
-a height of 400,  
-the URL as described below.  
+   * an appropriate title,  
+   * a height of 400,  
+   * the URL as described below.  
 6. Save your modified context page and see the app work.
 
 #### CAPC Browser View URL
