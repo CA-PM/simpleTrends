@@ -1,19 +1,34 @@
 # simpleTrends
-An interactive NVD3 based trend visualization for the CAPM OpenAPI
+An interactive trend view of bits per second for use in an interface context page.
 
-Installation Instructions:
 
-1. Copy app to user app directory on CAPC (/opt/CA/PerformanceCenter/PC/webapps/pc/apps/user)
-2. Modify/Add Interface context page tab
-3. Add browser view(s) with height of 400
-4. Add URL to app location with key parameters defined (see below)
+![Illustration of the simpleTrends app](simpleTrends_example.png)
 
-CAPC Browser view sample URL:
+Based on the NVD3 library.
+
+
+#### Install and Configure
+
+1. Download the folder containing the app (e.g., click Download ZIP above). Unzip the download if need be and make sure the unzipped folder is named simpleTrends.
+3.  Copy the folder to the webapps/pc/apps/user directory of your PC installation.  This is normally:  
+        /opt/CA/PerformanceCenter/PC/webapps/pc/apps/user  
+There is no need to start or restart PC.
+4. In PC, open a context page for an interface (Inventory -> Interfaces) and edit one of the tabs of the context page.
+5. Add a browser view to the page. Configure the browser view with:  
+an appropriate title,  
+a height of 400,  
+the URL as described below.  
+6. Save your modified context page and see the app work.
+
+#### CAPC Browser View URL
+
+The URL used to run the app is:
 
 /pc/apps/user/simpleTrends/multiMetric.html?id={ItemIdDA}&startTime={TimeStartUTC}&endTime={TimeEndUTC}
 
-Key URL parameters:
+Parameters:  
+id: is the ID of the interface for the selected context page  
+startTime: is the start time selected in the context page's time picker  
+endTime: is the end time selected in the context page's time picker
 
-id : is the ID of the interface for the selected context page
-startTime: is the UNIX Epoch start time defined by the CAPC Dashboard time control
-endTime: is the UNIX Epoch end time defined by the CAPC Dashboard time control
+#### Modifying the App
